@@ -1,4 +1,4 @@
-#include "PatternScanRule.h"
+#include "../../../include/mem/scanning/PatternScanRule.h"
 
 namespace asmkraken::mem {
     PatternScanRule::PatternScanRule() :

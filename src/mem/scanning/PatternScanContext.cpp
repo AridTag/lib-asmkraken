@@ -1,4 +1,4 @@
-#include "PatternScanContext.h"
+#include "../../../include/mem/scanning/PatternScanContext.h"
 
 namespace asmkraken::mem {
     PatternScanContext::PatternScanContext() :

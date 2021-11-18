@@ -3,7 +3,7 @@
 #include <winnt.h>
 #include <minwindef.h>
 
-#include "asm.h"
+#include "../../include/asm/asm.h"
 
 namespace asmkraken::__identifier(asm) {
     std::unique_ptr<uint8_t, std::default_delete<uint8_t[]>> Patch(void *pDest, const void *pSrc, size_t size) {

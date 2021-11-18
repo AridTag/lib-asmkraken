@@ -1,7 +1,7 @@
-#include "Pointer.h"
+#include "../../include/mem/Pointer.h"
 
 namespace asmkraken::mem {
-    Pointer::Pointer(intptr_t baseAddress) : BaseAddress(baseAddress), offsets(8) {
+    Pointer::Pointer(intptr_t baseAddress) : BaseAddress(baseAddress), offsets() {
     }
 
     Pointer::Pointer(intptr_t baseAddress, int32_t offset) : Pointer(baseAddress) {

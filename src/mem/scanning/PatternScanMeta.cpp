@@ -1,4 +1,4 @@
-#include "PatternScanMeta.h"
+#include "../../../include/mem/scanning/PatternScanMeta.h"
 
 namespace asmkraken::mem {
     PatternScanMeta::PatternScanMeta() :
