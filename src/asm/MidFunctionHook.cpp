@@ -3,16 +3,14 @@
 
 namespace asmkraken::assembly {
 
-    // TODO: CMAKE stuff
-#define _X86_
-
-#if defined(_X86_)
+#ifdef x86
 
     static const uint8_t MidFunctionHookTemplate[] = {
             0xE9, 0x00, 0x00, 0x00, 0x00, // jmp pFunc
     };
 
-#elif defined(_X64_)
+#endif
+#ifdef x64
 
     static const uint8_t MidFunctionHookTemplate[] = {
             0x50,                                                       // push rax        ; to preserve the register in case it's necessary
@@ -25,9 +23,9 @@ namespace asmkraken::assembly {
 
     constexpr size_t MIN_MIDF_HOOK_SIZE = sizeof(MidFunctionHookTemplate);
 
-    std::tuple<bool, Patch, intptr_t> CreateMidFunctionHook(void* pDest, void* pFunc, size_t hookSize) {
+    std::optional<MidFunctionHook> CreateMidFunctionHook(void* pDest, void* pFunc, size_t hookSize) {
         if (hookSize < MIN_MIDF_HOOK_SIZE) {
-            return {false, Patch(), 0};
+            return std::nullopt;
         }
 
         // 1. Ensure we can write to the memory location
@@ -41,16 +39,21 @@ namespace asmkraken::assembly {
         memset(instructions, 0x90, hookSize);
         memcpy(instructions, MidFunctionHookTemplate, MIN_MIDF_HOOK_SIZE);
 
-#if defined(_X86_)
-        *(int32_t*)(instructions + 1) = ((intptr_t)pFunc - (intptr_t)pDest) - MIN_MIDF_HOOK_SIZE;
-        intptr_t jmpBackAddr = ((intptr_t)pDest + MIN_MIDF_HOOK_SIZE);
-#elif defined(_X64_)
+#ifdef x86
+        *(int32_t*) (instructions + 1) = ((intptr_t) pFunc - (intptr_t) pDest) - MIN_MIDF_HOOK_SIZE;
+        intptr_t jmpBackAddr = ((intptr_t) pDest + MIN_MIDF_HOOK_SIZE);
+#endif
+        
+#ifdef x64
         *(int64_t*) (instructions + 3) = (intptr_t) pFunc + hookSize;
         intptr_t jmpBackAddr = ((intptr_t) pDest + MIN_MIDF_HOOK_SIZE - 1); // -1 because we want to execute the last instruction of our detour (pop rax)
 #endif
 
         auto patchBytes = PatchPtr(instructions);
         auto patch = Patch(mem::Pointer((intptr_t) pDest), std::move(patchBytes), hookSize);
-        return {true, std::move(patch), jmpBackAddr};
+        return MidFunctionHook{
+                .HookPatch = std::move(patch),
+                .JmpBackAddress = jmpBackAddr
+        };
     }
 }
