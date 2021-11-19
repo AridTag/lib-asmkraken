@@ -2,6 +2,8 @@
 #define LIB_ASMKRAKEN_ASMKRAKEN_H
 
 #include "asm/asm.h"
+#include "asm/Patch.h"
 #include "mem/Pointer.h"
+#include "mem/scanning/PatternScanner.h"
 
 #endif //LIB_ASMKRAKEN_ASMKRAKEN_H
