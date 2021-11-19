@@ -11,8 +11,10 @@ namespace asmkraken::assembly {
 
     class Patch {
     public:
+        Patch();
         Patch(Pointer targetAddress, PatchPtr patchBytes, size_t patchSize);
         Patch(Pointer targetAddress, size_t patchSize);
+        Patch(Patch&& p) noexcept;
         ~Patch();
 
         bool IsEnabled();

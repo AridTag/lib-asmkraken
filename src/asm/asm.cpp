@@ -17,7 +17,8 @@ namespace asmkraken::assembly {
         memcpy(pOriginalBytes, pDest, size);
         memcpy(pDest, pSrc, size);
 
-        VirtualProtect(pDest, size, oldProtection, &oldProtection);
+        DWORD oldProtection2;
+        VirtualProtect(pDest, size, oldProtection, &oldProtection2);
 
         return std::unique_ptr<uint8_t, std::default_delete<uint8_t[]>>(pOriginalBytes);
     }

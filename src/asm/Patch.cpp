@@ -4,6 +4,9 @@
 #include <utility>
 
 namespace asmkraken::assembly {
+    Patch::Patch() : Patch(Pointer(0), nullptr, 0) {
+
+    }
 
     Patch::Patch(Pointer targetAddress, PatchPtr patchBytes, size_t patchSize) :
             patchTargetAddress(std::move(targetAddress)),
@@ -14,6 +17,12 @@ namespace asmkraken::assembly {
 
     Patch::Patch(Pointer targetAddress, size_t patchSize) :
             Patch(std::move(targetAddress), nullptr, patchSize) {
+    }
+
+    Patch::Patch(Patch&& p) noexcept :
+            patchTargetAddress(std::move(p.patchTargetAddress)),
+            patchBytes(std::move(p.patchBytes)),
+            patchSize(std::exchange(p.patchSize, 0)) {
     }
 
     Patch::~Patch() {

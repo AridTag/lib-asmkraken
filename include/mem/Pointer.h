@@ -10,6 +10,7 @@ namespace asmkraken::mem {
         const intptr_t BaseAddress;
 
         explicit Pointer(intptr_t baseAddress);
+        Pointer(Pointer&& p) noexcept;
 
         Pointer(intptr_t baseAddress, int32_t offset);
 
