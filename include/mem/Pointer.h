@@ -12,14 +12,14 @@ namespace asmkraken::mem {
         explicit Pointer(intptr_t baseAddress);
         Pointer(Pointer&& p) noexcept;
 
-        Pointer(intptr_t baseAddress, int32_t offset);
+        Pointer(intptr_t baseAddress, ptrdiff_t offset);
 
         [[nodiscard]] uintptr_t Resolve() const;
 
-        [[nodiscard]] const std::vector<int32_t> &GetOffsets() const;
+        [[nodiscard]] const std::vector<ptrdiff_t> &GetOffsets() const;
 
     private:
-        std::vector<intptr_t> offsets;
+        std::vector<ptrdiff_t> offsets;
     };
 }
 

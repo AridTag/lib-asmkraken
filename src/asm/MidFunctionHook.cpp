@@ -43,7 +43,7 @@ namespace asmkraken::assembly {
         *(int32_t*) (instructions + 1) = ((intptr_t) pFunc - (intptr_t) pDest) - MIN_MIDF_HOOK_SIZE;
         intptr_t jmpBackAddr = ((intptr_t) pDest + MIN_MIDF_HOOK_SIZE);
 #endif
-        
+
 #ifdef x64
         *(int64_t*) (instructions + 3) = (intptr_t) pFunc + hookSize;
         intptr_t jmpBackAddr = ((intptr_t) pDest + MIN_MIDF_HOOK_SIZE - 1); // -1 because we want to execute the last instruction of our detour (pop rax)

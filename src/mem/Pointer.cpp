@@ -4,7 +4,7 @@ namespace asmkraken::mem {
     Pointer::Pointer(intptr_t baseAddress) : BaseAddress(baseAddress), offsets() {
     }
 
-    Pointer::Pointer(intptr_t baseAddress, int32_t offset) : Pointer(baseAddress) {
+    Pointer::Pointer(intptr_t baseAddress, ptrdiff_t offset) : Pointer(baseAddress) {
         offsets.push_back(offset);
     }
 
@@ -13,7 +13,7 @@ namespace asmkraken::mem {
             offsets(std::move(p.offsets)) {
     }
 
-    const std::vector<int32_t>& Pointer::GetOffsets() const {
+    const std::vector<ptrdiff_t>& Pointer::GetOffsets() const {
         return offsets;
     }
 
