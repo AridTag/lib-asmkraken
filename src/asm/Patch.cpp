@@ -49,12 +49,16 @@ namespace asmkraken::assembly {
             return;
         }
 
+        SuspendOtherThreads(true);
+
         uint8_t* pPatchBytes = patchBytes.get();
         if (pPatchBytes == nullptr) {
             originalBytes = Nop(pTarget, patchSize);
         } else {
             originalBytes = PatchAsm(pTarget, pPatchBytes, patchSize);
         }
+
+        SuspendOtherThreads(false);
     }
 
     void Patch::Disable() {
@@ -62,7 +66,11 @@ namespace asmkraken::assembly {
             return;
         }
 
+        SuspendOtherThreads(true);
+
         PatchAsm((void*) patchTargetAddress.Resolve(), originalBytes.get(), patchSize);
         originalBytes.reset();
+
+        SuspendOtherThreads(false);
     }
 }

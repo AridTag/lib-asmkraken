@@ -1,16 +1,17 @@
 #define WIN32_LEAN_AND_MEAN
+
 #include <Windows.h>
 #include <winnt.h>
 #include <minwindef.h>
+#include <TlHelp32.h>
 
 #include "../../include/asm/asm.h"
 
 namespace asmkraken::assembly {
-    std::unique_ptr<uint8_t[]> PatchAsm(void *pDest, const void *pSrc, size_t size) {
+    std::unique_ptr<uint8_t[]> PatchAsm(void* pDest, const void* pSrc, size_t size) {
         auto* pOriginalBytes = new uint8_t[size];
         DWORD oldProtection;
-        if (VirtualProtect(pDest, size, PAGE_EXECUTE_READWRITE, &oldProtection) == FALSE)
-        {
+        if (VirtualProtect(pDest, size, PAGE_EXECUTE_READWRITE, &oldProtection) == FALSE) {
             return nullptr;
         }
 
@@ -23,7 +24,7 @@ namespace asmkraken::assembly {
         return std::unique_ptr<uint8_t[]>(pOriginalBytes);
     }
 
-    std::unique_ptr<uint8_t[]> Nop(void *pDest, size_t size) {
+    std::unique_ptr<uint8_t[]> Nop(void* pDest, size_t size) {
         auto* nopArray = new uint8_t[size];
         memset(nopArray, 0x90, size);
         auto originalBytes = PatchAsm(pDest, nopArray, size);
@@ -56,5 +57,31 @@ namespace asmkraken::assembly {
             offsetToRelayFunc = -offsetToRelayFunc;
         }
         *(int32_t*) (writeAddr + 1) = offsetToRelayFunc;
+    }
+
+    void SuspendOtherThreads(bool suspend) {
+        HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+        if (hSnapshot != INVALID_HANDLE_VALUE) {
+            THREADENTRY32 te;
+            te.dwSize = sizeof(THREADENTRY32);
+            if (Thread32First(hSnapshot, &te)) {
+                do {
+                    if (te.dwSize >= (FIELD_OFFSET(THREADENTRY32, th32OwnerProcessID) + sizeof(DWORD))
+                        && te.th32OwnerProcessID == GetCurrentProcessId()
+                        && te.th32ThreadID != GetCurrentThreadId()) {
+
+                        HANDLE thread = OpenThread(THREAD_ALL_ACCESS, FALSE, te.th32ThreadID);
+                        if (thread != nullptr) {
+                            if (suspend) {
+                                SuspendThread(thread);
+                            } else {
+                                ResumeThread(thread);
+                            }
+                            CloseHandle(thread);
+                        }
+                    }
+                } while (Thread32Next(hSnapshot, &te));
+            }
+        }
     }
 }
