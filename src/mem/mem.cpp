@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <sysinfoapi.h>
 #include <memoryapi.h>
+#include <functional>
 #include "../../include/mem/mem.h"
 
 namespace asmkraken::mem {
@@ -11,7 +12,7 @@ namespace asmkraken::mem {
 
         const uint32_t pageSize = sysInfo.dwPageSize;
         *pOutPageSize = pageSize;
-        uintptr_t startAddr = (targetAddr & ~(pageSize - 1));
+        uintptr_t startAddr = (targetAddr & ~((uintptr_t)pageSize - 1));
         uintptr_t minAddr = min(startAddr - 0x7FFFFF00, (uintptr_t)sysInfo.lpMinimumApplicationAddress);
         uintptr_t maxAddr = max(startAddr + 0x7FFFFF00, (uintptr_t)sysInfo.lpMaximumApplicationAddress);
         uintptr_t startPage = startAddr - (startAddr % pageSize);

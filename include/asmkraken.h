@@ -4,6 +4,7 @@
 #include "asm/asm.h"
 #include "asm/MidFunctionHook.h"
 #include "asm/Patch.h"
+#include "mem/mem.h"
 #include "mem/Pointer.h"
 #include "mem/scanning/PatternScanner.h"
 

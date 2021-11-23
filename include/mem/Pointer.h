@@ -10,9 +10,9 @@ namespace asmkraken::mem {
         const intptr_t BaseAddress;
 
         explicit Pointer(intptr_t baseAddress);
-        Pointer(Pointer&& p) noexcept;
-
+        Pointer(const Pointer& p) = default;
         Pointer(intptr_t baseAddress, ptrdiff_t offset);
+        Pointer(Pointer&& p) noexcept;
 
         [[nodiscard]] uintptr_t Resolve() const;
 

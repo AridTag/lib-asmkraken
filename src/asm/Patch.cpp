@@ -4,7 +4,8 @@
 #include <utility>
 
 namespace asmkraken::assembly {
-    Patch::Patch() : Patch(Pointer(0), nullptr, 0) {
+    Patch::Patch() :
+            Patch(Pointer(0), nullptr, 0) {
 
     }
 
@@ -19,18 +20,19 @@ namespace asmkraken::assembly {
             Patch(std::move(targetAddress), nullptr, patchSize) {
     }
 
-    Patch::Patch(Patch&& p) noexcept :
+    Patch::Patch(Patch&& p) noexcept:
             patchTargetAddress(std::move(p.patchTargetAddress)),
             patchBytes(std::move(p.patchBytes)),
             patchSize(std::exchange(p.patchSize, 0)) {
     }
 
-    Patch::~Patch() {
-        Disable();
-    }
-
     bool Patch::IsEnabled() {
-        return originalBytes != nullptr;
+        auto* patchTarget = (void*)patchTargetAddress.Resolve();
+        if (patchTarget == nullptr) {
+            return false;
+        }
+
+        return std::memcmp(patchTarget, patchBytes.get(), patchSize) == 0;
     }
 
     void Patch::Toggle() {
@@ -42,11 +44,7 @@ namespace asmkraken::assembly {
     }
 
     void Patch::Enable() {
-        if (IsEnabled()) {
-            return;
-        }
-
-        void* pTarget = (void*)patchTargetAddress.Resolve();
+        void* pTarget = (void*) patchTargetAddress.Resolve();
         if (pTarget == nullptr || patchBytes == nullptr) {
             return;
         }
@@ -60,11 +58,11 @@ namespace asmkraken::assembly {
     }
 
     void Patch::Disable() {
-        if (!IsEnabled()) {
+        if (originalBytes == nullptr) {
             return;
         }
 
-        PatchAsm((void*)patchTargetAddress.Resolve(), originalBytes.get(), patchSize);
-        originalBytes.reset(nullptr);
+        PatchAsm((void*) patchTargetAddress.Resolve(), originalBytes.get(), patchSize);
+        originalBytes.reset();
     }
 }
