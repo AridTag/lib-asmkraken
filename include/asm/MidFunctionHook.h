@@ -31,7 +31,7 @@ namespace asmkraken::assembly {
          * The relay function will then jump back to the hooked function
          */
         template<typename T = void(Registers)>
-        static std::optional<asmkraken::assembly::MidFunctionHook> TryCreateMidFunctionHook(void* pDest, std::function<void(asmkraken::assembly::Registers&)> hookFunc, size_t hookSize, size_t replacedInstructionsStartOffset) {
+        static std::optional<asmkraken::assembly::MidFunctionHook> TryCreateMidFunctionHook(void* pDest, std::function<void(asmkraken::assembly::Registers)> hookFunc, size_t hookSize, size_t replacedInstructionsStartOffset) {
             if (hookSize < asmkraken::assembly::JmpTemplateSize) {
                 return std::nullopt;
             }

@@ -89,7 +89,7 @@ namespace asmkraken::assembly {
             0x41, 0x55,                                                 // push r13
             0x41, 0x56,                                                 // push r14
             0x41, 0x57,                                                 // push r15
-            0x48, 0x89, 0xE9                                            // mov rcx, rbp              ; Allows the stack to be de-referenced as the Registers struct
+            0x48, 0x89, 0xE1                                            // mov rcx, rsp              ; Allows the stack to be de-referenced as the Registers struct
     };
 
     constexpr ptrdiff_t RelayFunctionTargetAddrOffset = 2;
