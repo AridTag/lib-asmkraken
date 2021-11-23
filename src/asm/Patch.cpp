@@ -47,6 +47,10 @@ namespace asmkraken::assembly {
         }
 
         void* pTarget = (void*)patchTargetAddress.Resolve();
+        if (pTarget == nullptr || patchBytes == nullptr) {
+            return;
+        }
+
         uint8_t* pPatchBytes = patchBytes.get();
         if (pPatchBytes == nullptr) {
             originalBytes = Nop(pTarget, patchSize);

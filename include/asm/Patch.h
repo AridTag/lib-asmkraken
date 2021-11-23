@@ -2,6 +2,7 @@
 #define LIB_ASMKRAKEN_PATCH_H
 
 #include <memory>
+#include "../Toggleable.h"
 #include "../mem/Pointer.h"
 
 namespace asmkraken::assembly {
@@ -9,7 +10,7 @@ namespace asmkraken::assembly {
 
     typedef std::unique_ptr<uint8_t, std::default_delete<uint8_t[]>> PatchPtr;
 
-    class Patch {
+    class Patch : Toggleable {
     public:
         Patch();
         Patch(Pointer targetAddress, PatchPtr patchBytes, size_t patchSize);
@@ -17,10 +18,10 @@ namespace asmkraken::assembly {
         Patch(Patch&& p) noexcept;
         ~Patch();
 
-        bool IsEnabled();
-        void Toggle();
-        void Enable();
-        void Disable();
+        bool IsEnabled() final;
+        void Toggle() final;
+        void Enable() final;
+        void Disable() final;
 
     private:
         Pointer patchTargetAddress;
