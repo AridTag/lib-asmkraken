@@ -1,5 +1,3 @@
-include(Y:/GitWorkspace/vcpkg/scripts/buildsystems/vcpkg.cmake)
-
 cmake_minimum_required(VERSION 3.20)
 project(lib_asmkraken)
 
