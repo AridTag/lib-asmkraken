@@ -19,6 +19,7 @@ namespace asmkraken::mem {
         void AddMeta(const PatternScanMeta &meta);
         void AddMatch(const PatternScanMatch &match);
         [[nodiscard]] const vector<PatternScanMatch> &GetMatches() const;
+        [[nodiscard]] const vector<PatternScanMeta> &GetMetadata() const;
 
     private:
         string name;

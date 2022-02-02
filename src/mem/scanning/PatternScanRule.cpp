@@ -1,12 +1,7 @@
 #include "../../../include/mem/scanning/PatternScanRule.h"
 
 namespace asmkraken::mem {
-    PatternScanRule::PatternScanRule() :
-            name(),
-            metadata(),
-            matches() {
-
-    }
+    PatternScanRule::PatternScanRule() = default;
 
     const std::string &PatternScanRule::GetName() const {
         return name;
@@ -27,4 +22,9 @@ namespace asmkraken::mem {
     const vector<PatternScanMatch> &PatternScanRule::GetMatches() const {
         return matches;
     }
+
+    const vector<PatternScanMeta>& PatternScanRule::GetMetadata() const {
+        return metadata;
+    }
+
 }
