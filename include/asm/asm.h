@@ -8,7 +8,7 @@ namespace asmkraken::assembly {
     std::unique_ptr<uint8_t[]> PatchAsm(void *pDest, const void *pSrc, size_t size);
     std::unique_ptr<uint8_t[]> Nop(void *pDest, size_t size);
 
-#ifdef x86
+#ifdef ASMKRAKEN_x86
     struct Registers {
         uint32_t ESI;
         uint32_t EBP;
@@ -19,7 +19,7 @@ namespace asmkraken::assembly {
     };
 #endif
 
-#ifdef x64
+#ifdef ASMKRAKEN_x64
     struct Registers {
         uint64_t R15;
         uint64_t R14;
@@ -43,7 +43,7 @@ namespace asmkraken::assembly {
             0xE9, 0x00, 0x00, 0x00, 0x00, // jmp addr
     };
 
-#ifdef x86
+#ifdef ASMKRAKEN_x86
 
     static const uint8_t RelayFunctionPrologue[] = {
             0x50,                                                       // push eax
@@ -72,7 +72,7 @@ namespace asmkraken::assembly {
             0x58                                                        // pop rax
     };
 #endif
-#ifdef x64
+#ifdef ASMKRAKEN_x64
     static const uint8_t RelayFunctionPrologue[]{
             0x50,                                                       // push rax
             0x51,                                                       // push rcx
